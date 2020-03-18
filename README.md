@@ -1,6 +1,6 @@
 # Drone_virtuel_aquatique
 
-Ce projet 
+Ce projet est un projet pour le cour de Developement sur Smartphone en L3 de l'Université de la Rochelle 
 
 ## Contributeur
   + Theo BERGUIG : Chef de projet
@@ -16,7 +16,6 @@ Ce projet
   + Gestion de projet :  trello 
   
 ### Présentation de votre compréhension du besoin
-   + Diagrammes de classes  :  draw.io
-   + Diagrammes de fonctionnalités : draw.io
-   + Entrées / Sorties de vos outils : tableau de test (vue en génie log)
+   + Diagrammes de classes  :  draw.io + Visual paradime
+   + Diagrammes de fonctionnalités : draw.io  + Visual paradime
    
