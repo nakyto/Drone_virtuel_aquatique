@@ -13,6 +13,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dronique.R;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -20,7 +25,8 @@ import com.example.dronique.R;
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
-
+    private GoogleMap map;
+    MapView mapView;
     private PageViewModel pageViewModel;
 
     public static PlaceholderFragment newInstance(int index) {
@@ -47,13 +53,45 @@ public class PlaceholderFragment extends Fragment {
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-        final TextView textView = root.findViewById(R.id.section_label);
-        pageViewModel.getText().observe(this, new Observer<String>() {
+        mapView = (MapView) root.findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mapView.getMapAsync(new OnMapReadyCallback(){
+
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onMapReady(GoogleMap googleMap) {
+                map = googleMap;
             }
         });
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 }
