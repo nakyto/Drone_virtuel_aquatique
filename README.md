@@ -7,7 +7,7 @@ Ce projet est un projet pour le cour de Developement sur Smartphone en L3 de l'U
   + Simon CLEMENCEAU : Scrum Master
   + Teddy NIEMEZYK : Lead Devlopeur
   + Mélanie RENNIE :  Développeur
-  + ? : Developeur
+  + Dorian GACON : Developeur
 
 ## Dépot 1
 ### les outie
