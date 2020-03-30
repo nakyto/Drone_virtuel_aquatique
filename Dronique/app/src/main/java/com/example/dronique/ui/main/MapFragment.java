@@ -51,7 +51,7 @@ public class MapFragment extends Fragment {
         int index = 1;
         /*
         if (getArguments() != null) {
-            index = setcionNumber;
+            index = sectionNumber;
         }
         */
         mPageViewModel.setIndex(index);

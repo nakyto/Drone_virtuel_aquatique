@@ -17,6 +17,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Map;
 
@@ -44,9 +46,31 @@ public class Tab3Fragment extends Fragment {
         }
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
+
+
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
+                //création d'un waypoint après un click sur la carte
+                mGoogleMap.setOnMapClickListener(
+                        new GoogleMap.OnMapClickListener(){
+                            @Override
+                            public void onMapClick(LatLng pos){
+                                mGoogleMap.addMarker(new MarkerOptions().position(pos));
+                            }
+                        }
+                );
+                //suppression d'un waypoint après un click sur celui-ci
+                mGoogleMap.setOnMarkerClickListener(
+                        new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                marker.remove();
+                                return true;
+                            }
+                        }
+                );
+                //définition de la position de la caméra au lancement de la vue
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
