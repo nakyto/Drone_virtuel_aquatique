@@ -4,10 +4,10 @@ Ce projet est un projet pour le cour de Developement sur Smartphone en L3 de l'U
 
 ## Contributeur
   + Theo BERGUIG : Chef de projet
-  + Simon CLEMENCEAU : Scrum Master
+  + ? : Scrum Master
   + Teddy NIEMEZYK : Lead Devlopeur
-  + Mélanie RENNIE :  Développeur
-  + Doran GACON : Developeur
+  + ? :  Développeur
+  + ? : Developeur
 
 ## Dépot 1
 ### les outie
