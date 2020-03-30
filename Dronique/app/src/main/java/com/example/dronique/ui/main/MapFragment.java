@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.dronique.Client;
 import com.example.dronique.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class MapFragment extends Fragment {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    private static int setcionNumber;
     private PageViewModel mPageViewModel;
     private GoogleMap mGoogleMap;
     private MapView mMapView;
@@ -35,7 +36,7 @@ public class MapFragment extends Fragment {
     public static MapFragment newInstance(int index) {
         MapFragment fragment = new MapFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
+        setcionNumber = index;
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -48,9 +49,11 @@ public class MapFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mPageViewModel = ViewModelProviders.of(this).get(PageViewModel.class);
         int index = 1;
+        /*
         if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
+            index = setcionNumber;
         }
+        */
         mPageViewModel.setIndex(index);
     }
 
@@ -88,6 +91,18 @@ public class MapFragment extends Fragment {
             }
 
         });
+
+        if(setcionNumber == 1){
+            System.out.println("****** je suis sur la page 1 ****");
+
+        }
+        else if(setcionNumber == 2) {
+            System.out.println("****** je suis sur la page 2 ****");
+        }
+        else{
+            System.out.println("****** je suis sur la page 3 ****");
+        }
+
         return view;
     }
 

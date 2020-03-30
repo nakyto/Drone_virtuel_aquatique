@@ -10,6 +10,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.dronique.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Cette classe permet de gérer les différentes vue
  * Permet de faire le lien entre vue et identifiant
@@ -17,17 +20,16 @@ import com.example.dronique.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
-    private final Context mContext;
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<String> mFragmentTitleList = new ArrayList<>();
 
 
     /**
      * @param context   Context d'éxécution
      * @param fm        Gestionnaire de fragment
      */
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
-        mContext = context;
     }
 
 
@@ -37,7 +39,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public Fragment getItem(int position) {
-        return MapFragment.newInstance(position + 1);
+        return mFragmentList.get(position);
+    }
+
+
+    /**
+     * @param fragment  Le fragment à ajouter
+     * @param title     Le titre du fragment à ajouter
+     */
+    public void addFragment(Fragment fragment, String title) {
+        mFragmentList.add(fragment);
+        mFragmentTitleList.add(title);
     }
 
 
@@ -45,10 +57,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      * @param position  Identifiant de la vue
      * @return  Le titre de la vue
      */
-    @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return mContext.getResources().getString(TAB_TITLES[position]);
+            return mFragmentTitleList.get(position);
     }
 
 
@@ -57,6 +68,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
-        return 3;
+        return mFragmentList.size();
     }
 }

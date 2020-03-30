@@ -2,6 +2,9 @@ package com.example.dronique;
 
 import android.os.Bundle;
 
+import com.example.dronique.ui.main.Tab1Fragment;
+import com.example.dronique.ui.main.Tab2Fragment;
+import com.example.dronique.ui.main.Tab3Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -17,20 +20,27 @@ import com.example.dronique.ui.main.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
+    private SectionsPagerAdapter mTabAdapter;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Recuperation de la vue
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        mViewPager = findViewById(R.id.view_pager);
+        TabLayout tabs = findViewById(R.id.tabs);
 
         // Creation de l'adapter
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(sectionsPagerAdapter);
+        mTabAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mTabAdapter.addFragment(new Tab1Fragment(), "vue 1");
+        mTabAdapter.addFragment(new Tab2Fragment(), "vue 2");
+        mTabAdapter.addFragment(new Tab3Fragment(), "vue 3");
 
         // Ajout des tab a la vue
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        mViewPager.setAdapter(mTabAdapter);
+        tabs.setupWithViewPager(mViewPager);
     }
 }
