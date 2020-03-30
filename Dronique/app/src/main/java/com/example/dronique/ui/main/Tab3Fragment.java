@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,12 +27,12 @@ public class Tab3Fragment extends Fragment {
 
     private MapView mMapView;
     private GoogleMap mGoogleMap;
-
+    private SeekBar mSeekBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_one, container, false);
+        View view = inflater.inflate(R.layout.fragment_three, container, false);
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
@@ -76,6 +77,7 @@ public class Tab3Fragment extends Fragment {
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
+
 
         return view;
     }
