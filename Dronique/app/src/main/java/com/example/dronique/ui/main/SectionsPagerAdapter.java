@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.dronique.R;
 
 /**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
+ * Cette classe permet de gérer les différentes vue
+ * Permet de faire le lien entre vue et identifiant
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -20,27 +20,43 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
 
+
+    /**
+     * @param context   Context d'éxécution
+     * @param fm        Gestionnaire de fragment
+     */
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }
 
+
+    /**
+     * @param position Identifiant de la vue
+     * @return  Le fragment initialisé corresponsant à la vue
+     */
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position + 1);
+        return MapFragment.newInstance(position + 1);
     }
 
+
+    /**
+     * @param position  Identifiant de la vue
+     * @return  Le titre de la vue
+     */
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
+
+    /**
+     * @return  Le nombre total de page
+     */
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 3;
     }
 }
