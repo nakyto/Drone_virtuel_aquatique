@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,7 +33,7 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_three, container, false);
+        final View view = inflater.inflate(R.layout.fragment_three, container, false);
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
@@ -75,6 +76,28 @@ public class Tab3Fragment extends Fragment {
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+        mSeekBar = (SeekBar) view.findViewById(R.id.speedBar);
+        mSeekBar.setMax(60);
+        mSeekBar.setProgress(15);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    TextView mTextView = view.findViewById(R.id.speedView);
+                    mTextView.setText(String.valueOf(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 

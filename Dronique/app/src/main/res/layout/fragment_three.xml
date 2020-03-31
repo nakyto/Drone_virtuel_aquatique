@@ -28,7 +28,8 @@
                 android:progress="60" />
 
             <TextView
-                android:text="@string/speed"
+                android:text="15"
+                android:id="@+id/speedView"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:layout_marginRight="5dp" />
