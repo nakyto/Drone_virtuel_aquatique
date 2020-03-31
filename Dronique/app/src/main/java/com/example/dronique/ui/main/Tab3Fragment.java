@@ -49,7 +49,6 @@ public class Tab3Fragment extends Fragment {
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
-
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
@@ -61,7 +60,7 @@ public class Tab3Fragment extends Fragment {
                                 TextView mTextView = view.findViewById(R.id.speedView);
                                 Marker mMarker = mGoogleMap.addMarker(new MarkerOptions()
                                                             .position(pos)
-                                                            .title((String) mTextView.getText()));
+                                                            .title((String) mTextView.getText() + " noeuds"));
                                 mMarker.showInfoWindow();
                             }
                         }
