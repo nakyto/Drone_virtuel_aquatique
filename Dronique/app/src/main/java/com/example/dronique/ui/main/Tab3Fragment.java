@@ -58,7 +58,9 @@ public class Tab3Fragment extends Fragment {
                         new GoogleMap.OnMapClickListener(){
                             @Override
                             public void onMapClick(LatLng pos){
-                                mGoogleMap.addMarker(new MarkerOptions().position(pos));
+                                TextView mTextView = view.findViewById(R.id.speedView);
+                                mGoogleMap.addMarker(new MarkerOptions().position(pos)
+                                                                        .title((String) mTextView.getText()));
                             }
                         }
                 );
