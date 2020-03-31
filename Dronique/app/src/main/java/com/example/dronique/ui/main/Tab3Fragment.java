@@ -59,18 +59,19 @@ public class Tab3Fragment extends Fragment {
                             @Override
                             public void onMapClick(LatLng pos){
                                 TextView mTextView = view.findViewById(R.id.speedView);
-                                mGoogleMap.addMarker(new MarkerOptions().position(pos)
-                                                                        .title((String) mTextView.getText()));
+                                Marker mMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                                            .position(pos)
+                                                            .title((String) mTextView.getText()));
+                                mMarker.showInfoWindow();
                             }
                         }
                 );
                 //suppression d'un waypoint après un click sur celui-ci
-                mGoogleMap.setOnMarkerClickListener(
-                        new GoogleMap.OnMarkerClickListener() {
+                mGoogleMap.setOnInfoWindowClickListener(
+                        new GoogleMap.OnInfoWindowClickListener() {
                             @Override
-                            public boolean onMarkerClick(Marker marker) {
+                            public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
-                                return true;
                             }
                         }
                 );
