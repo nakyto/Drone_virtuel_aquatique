@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -30,12 +31,13 @@ import java.util.Observer;
 
 public class Tab1Fragment extends Fragment {
 
-    private MapView mMapView;
-    private GoogleMap mGoogleMap;
-    private Marker mMarker;
+    private MapView mMapView = null;
+    private GoogleMap mGoogleMap = null;
+    private Marker mMarker = null;
     private Client mClient = null;
-    private Drone mDrone;
-    private Bundle mSavedState;
+    private Drone mDrone = null;
+    private Bundle mSavedState = null;
+    private TextView mTextSpeed = null;
 
     public Tab1Fragment(Drone drone)
     {
@@ -49,6 +51,9 @@ public class Tab1Fragment extends Fragment {
 
         // Création du drone
         mDrone = new Drone();
+
+        // Récupération du TextView pour la vitesse
+        mTextSpeed = (TextView) view.findViewById(R.id.speed);
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
@@ -126,6 +131,7 @@ public class Tab1Fragment extends Fragment {
                 mMarker.setPosition(pos);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(pos).zoom(12).build();
                 mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                mTextSpeed.setText("Speed : " + mDrone.getSpeed());
             }
         }
     }
