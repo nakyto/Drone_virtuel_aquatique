@@ -11,13 +11,20 @@ import java.util.Observable;
 
 public class Drone extends Observable {
     private Frame mFrame;
-    private MyEvent mMyEvent;
 
     public void updatePosition(Frame frame){
         mFrame = frame;
     }
 
     public LatLng getPosition(){
-        return new LatLng(mFrame.getDroneLat(), mFrame.getDroneLng());
+        if(mFrame != null)
+            return new LatLng(mFrame.getDroneLat(), mFrame.getDroneLng());
+        return null;
+    }
+
+    public Double getSpeed() {
+        if(mFrame != null)
+            return mFrame.getDroneSpeed();
+        return null;
     }
 }
