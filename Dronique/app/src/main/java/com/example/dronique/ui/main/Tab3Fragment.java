@@ -60,12 +60,14 @@ public class Tab3Fragment extends Fragment {
                                 TextView mTextView = view.findViewById(R.id.speedView);
                                 Marker mMarker = mGoogleMap.addMarker(new MarkerOptions()
                                                             .position(pos)
-                                                            .title((String) mTextView.getText() + " noeuds"));
+                                                            .title((String) mTextView.getText() + " noeuds")
+                                                            .snippet("Cliquez ici pour supprimer le waypoint"));
+                                mMarker.setTag(true);
                                 mMarker.showInfoWindow();
                             }
                         }
                 );
-                //suppression d'un waypoint après un click sur celui-ci
+                //suppression d'un waypoint après un click sur son info-bulle
                 mGoogleMap.setOnInfoWindowClickListener(
                         new GoogleMap.OnInfoWindowClickListener() {
                             @Override
@@ -74,6 +76,7 @@ public class Tab3Fragment extends Fragment {
                             }
                         }
                 );
+
                 //définition de la position de la caméra au lancement de la vue
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
