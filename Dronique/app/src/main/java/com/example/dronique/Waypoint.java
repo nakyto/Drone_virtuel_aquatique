@@ -1,6 +1,11 @@
 package com.example.dronique;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Waypoint {
+    private List<Waypoint> mWaypointHistory = null;
+
     private double mDroneLat = 0.0;
     private double mDroneLng = 0.0;
     private String orientation_latitude = "N";
@@ -11,6 +16,10 @@ public class Waypoint {
         mDroneLat = droneLat;
         mDroneLng = droneLng;
         mDroneSpeed = droneSpeed;
+    }
+
+    public Waypoint(){
+        mWaypointHistory = new ArrayList<>();
     }
 
     public double getDroneLat(){
@@ -25,6 +34,29 @@ public class Waypoint {
         return mDroneSpeed;
     }
 
+
+    // Gestion de l'historique
+    public List<Waypoint> getWaypointHistory() {
+        return getWaypointHistory();
+    }
+
+    public void addToWaypointHistory(double droneLat, double droneLng, double droneSpeed) {
+        this.mWaypointHistory.add(new Waypoint(droneLat, droneLng, droneSpeed));
+        mDroneLat = droneLat;
+        mDroneLng = droneLng;
+        mDroneSpeed = droneSpeed;
+    }
+
+    public void removeWaypointHistory(double droneLat, double droneLng) {
+        for (Waypoint waypoint: this.mWaypointHistory) {
+            if(waypoint.mDroneLat == droneLat && waypoint.mDroneLng == droneLng) {
+                mWaypointHistory.remove(waypoint);
+            }
+        }
+    }
+
+
+    // Gestion des trames
     public String parseToFrame(){
 
         return "toto";

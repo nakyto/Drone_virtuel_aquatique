@@ -10,6 +10,9 @@ import java.util.Observable;
 public class Drone extends Observable {
     private Waypoint mWaypoint;
 
+    public Drone(){
+        mWaypoint = new Waypoint();
+    }
 
     /**
      * Met à jour la position du drone
@@ -28,6 +31,10 @@ public class Drone extends Observable {
         if(mWaypoint != null)
             return new LatLng(mWaypoint.getDroneLat(), mWaypoint.getDroneLng());
         return null;
+    }
+
+    public Waypoint getWaypoint(){
+        return mWaypoint;
     }
 
 
