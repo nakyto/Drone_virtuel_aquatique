@@ -1,7 +1,6 @@
 package com.example.dronique;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.dronique.ui.main.Tab1Fragment;
 
@@ -9,7 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import static com.example.dronique.Frame.Parse;
+import static com.example.dronique.Waypoint.Parse;
 
 public class Client extends AsyncTask<Void, String, Void> {
 

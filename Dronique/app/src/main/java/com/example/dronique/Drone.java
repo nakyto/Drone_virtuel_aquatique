@@ -1,30 +1,25 @@
 package com.example.dronique;
 
-import com.example.dronique.Frame;
-import com.example.dronique.ui.main.Tab1Fragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Observable;
 
 public class Drone extends Observable {
-    private Frame mFrame;
+    private Waypoint mWaypoint;
 
-    public void updatePosition(Frame frame){
-        mFrame = frame;
+    public void updatePosition(Waypoint waypoint){
+        mWaypoint = waypoint;
     }
 
     public LatLng getPosition(){
-        if(mFrame != null)
-            return new LatLng(mFrame.getDroneLat(), mFrame.getDroneLng());
+        if(mWaypoint != null)
+            return new LatLng(mWaypoint.getDroneLat(), mWaypoint.getDroneLng());
         return null;
     }
 
     public Double getSpeed() {
-        if(mFrame != null)
-            return mFrame.getDroneSpeed();
+        if(mWaypoint != null)
+            return mWaypoint.getDroneSpeed();
         return null;
     }
 }

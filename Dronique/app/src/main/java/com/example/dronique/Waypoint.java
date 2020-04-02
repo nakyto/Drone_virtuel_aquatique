@@ -1,13 +1,13 @@
 package com.example.dronique;
 
-public class Frame {
+public class Waypoint {
     private double mDroneLat = 0.0;
     private double mDroneLng = 0.0;
     private String orientation_latitude = "N";
     private String orientation_longitude = "E";
     private double mDroneSpeed = 0;
 
-    public Frame(double droneLat, double droneLng, double droneSpeed){
+    public Waypoint(double droneLat, double droneLng, double droneSpeed){
         mDroneLat = droneLat;
         mDroneLng = droneLng;
         mDroneSpeed = droneSpeed;
@@ -25,7 +25,12 @@ public class Frame {
         return mDroneSpeed;
     }
 
-    public static Frame Parse(String line){
+    public String parseToFrame(){
+
+        return "toto";
+    }
+
+    public static Waypoint ParseFromFrame(String line){
 
         String drone_latitude = "0";
         String orientation_latitude = "N";
@@ -59,6 +64,6 @@ public class Frame {
             longitude = longitude * -1;
         }
 
-        return new Frame(latitude, longitude, drone_vitesse);
+        return new Waypoint(latitude, longitude, drone_vitesse);
     }
 }
