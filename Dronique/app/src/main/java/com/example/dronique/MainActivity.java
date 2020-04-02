@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
+    private Drone mDrone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Creation de l'adapter
         mTabAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mTabAdapter.addFragment(new Tab1Fragment(), "vue 1");
+        mTabAdapter.addFragment(new Tab1Fragment(mDrone), "vue 1");
         mTabAdapter.addFragment(new Tab2Fragment(), "vue 2");
         mTabAdapter.addFragment(new Tab3Fragment(), "vue 3");
 
