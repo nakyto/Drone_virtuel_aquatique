@@ -48,9 +48,9 @@ public class Waypoint {
     }
 
     public void removeFromWaypointHistory(double droneLat, double droneLng) {
-        for (Waypoint waypoint: this.mWaypointHistory) {
-            if(waypoint.mDroneLat == droneLat && waypoint.mDroneLng == droneLng) {
-                mWaypointHistory.remove(waypoint);
+        for (int i = 0; i < mWaypointHistory.size(); i ++) {
+            if (mWaypointHistory.get(i).getDroneLat() == droneLat && mWaypointHistory.get(i).mDroneLng == droneLng) {
+                mWaypointHistory.remove(mWaypointHistory.get(i));
             }
         }
     }
