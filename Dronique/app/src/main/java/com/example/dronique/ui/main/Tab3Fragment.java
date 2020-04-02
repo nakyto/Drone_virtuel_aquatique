@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.dronique.Client;
 import com.example.dronique.Drone;
 import com.example.dronique.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,8 +20,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Map;
 
 public class Tab3Fragment extends Fragment {
 
@@ -69,7 +65,6 @@ public class Tab3Fragment extends Fragment {
                                                             .snippet("Cliquez ici pour supprimer le waypoint"));
                                 double speed = Double.parseDouble(mTextView.getText().toString());
                                 mDrone.getWaypoint().addToWaypointHistory(pos.latitude, pos.longitude, speed);
-                                mMarker.setTag(true);
                                 mMarker.showInfoWindow();
                             }
                         }
@@ -80,7 +75,7 @@ public class Tab3Fragment extends Fragment {
                             @Override
                             public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
-                                mDrone.getWaypoint().removeWaypointHistory(marker.getPosition().latitude, marker.getPosition().longitude);
+                                mDrone.getWaypoint().removeFromWaypointHistory(marker.getPosition().latitude, marker.getPosition().longitude);
                             }
                         }
                 );

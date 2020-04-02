@@ -47,7 +47,7 @@ public class Waypoint {
         mDroneSpeed = droneSpeed;
     }
 
-    public void removeWaypointHistory(double droneLat, double droneLng) {
+    public void removeFromWaypointHistory(double droneLat, double droneLng) {
         for (Waypoint waypoint: this.mWaypointHistory) {
             if(waypoint.mDroneLat == droneLat && waypoint.mDroneLng == droneLng) {
                 mWaypointHistory.remove(waypoint);
