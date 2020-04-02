@@ -49,19 +49,19 @@ public class Waypoint {
         
         int index_point_latitude = drone_latitude.indexOf("."); //On repère où se trouve le point dans la latitude
         float DM_latitude = Float.parseFloat(drone_latitude.substring(index_point_latitude-2)); //Tout se qui se trouve après le point correspond aux Decimal Minutes de la latitude
-        int Degre_latitude = Integer.parseInt(drone_latitude.substring(0, index_point_latitude-2)); //Tout se qui se trouve après le point correspond au Degree de la latitude
+        int Degre_latitude = Integer.parseInt(drone_latitude.substring(0, index_point_latitude-2)); //Tout se qui se trouve avant le point correspond au Degree de la latitude
         float latitude = Degre_latitude + (DM_latitude/60) ; //Conversion du format DDM en format DD
 
-        if(orientation_latitude.contains("S")){ //Si N (North) alors latitude positive, si S (South) alors latitude négative
+        if(orientation_latitude.contains("S")){ //Si N (North) alors on laisse la latitude positive, si S (South) alors latitude négative
             latitude = latitude * -1;
         }
 
         int index_point_longitude = drone_longitude.indexOf("."); //On repère où se trouve le point dans la longitude
         float DM_longitude = Float.parseFloat(drone_longitude.substring(index_point_longitude-2)); //Tout se qui se trouve après le point correspond aux Decimal Minutes de la longitude
-        int Degre_longitude = Integer.parseInt(drone_longitude.substring(0, index_point_longitude-2)); //Tout se qui se trouve après le point correspond au Degree de la longitude
+        int Degre_longitude = Integer.parseInt(drone_longitude.substring(0, index_point_longitude-2)); //Tout se qui se trouve avant le point correspond au Degree de la longitude
         float longitude = Degre_longitude + (DM_longitude/60) ; //Conversion du format DDM en format DD
 
-        if(orientation_longitude.contains("W")){ //Si E (East) alors longitude positive, si W (West) alors longitude négative
+        if(orientation_longitude.contains("W")){ //Si E (East) alors on laisse la longitude positive, si W (West) alors longitude négative
             longitude = longitude * -1;
         }
 
