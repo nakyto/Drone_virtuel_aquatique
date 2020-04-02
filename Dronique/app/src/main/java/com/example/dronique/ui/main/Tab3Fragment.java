@@ -36,6 +36,7 @@ public class Tab3Fragment extends Fragment {
     private Drone mDrone;
     private SeekBar mSeekBar;
     private Button mButton;
+    private Polyline mPolyline = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -127,7 +128,10 @@ public class Tab3Fragment extends Fragment {
                 for(int i=0; i<list.size();i++){
                     arrayList.add(list.get(i).getLatLng());
                 }
-                mGoogleMap.addPolyline(new PolylineOptions()
+                if (mPolyline!=null){
+                    mPolyline.remove();
+                }
+                mPolyline=mGoogleMap.addPolyline(new PolylineOptions()
                         .addAll(arrayList)
                         .width(7)
                         .color(Color.RED));
