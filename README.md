@@ -4,8 +4,8 @@ Ce projet est un projet pour le cour de Developement sur Smartphone en L3 de l'U
 
 ## Contributeur
   + Theo BERGUIG : Chef de projet
-  + Simon CLEMENCEAU : Scrum Master
-  + Teddy NIEMEZYK : Lead Devlopeur
+  + Lumagnus/Simon CLEMENCEAU : Scrum Master
+  + playfun25/Teddy NIEMEZYK : Lead Devlopeur
   + Mélanie RENNIE :  Développeur
   + Dorian GACON : Developeur
 
