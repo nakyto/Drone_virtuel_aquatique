@@ -10,20 +10,28 @@ import java.net.Socket;
 
 import static com.example.dronique.Waypoint.ParseFromFrame;
 
+/**
+ * Client tcp pour se connecter au NMEA Simulator
+ */
 public class Client extends AsyncTask<Void, String, Void> {
 
     private Drone mDrone;
     private Tab1Fragment mTab1;
 
-    Socket mSock = null;
-    DataOutputStream mOS = null;
-    DataInputStream mIS = null;
-
+    /**
+     * Constructeur du  Client
+     * @param drone
+     * @param tab1
+     */
     public Client(Drone drone, Tab1Fragment tab1){
         mDrone = drone;
         mTab1 = tab1;
     }
 
+    /**
+     * Réception de la progession du doInBackground
+     * @param responseLine
+     */
     @Override
     protected void onProgressUpdate(String... responseLine){
         if(mDrone != null) {
@@ -32,21 +40,30 @@ public class Client extends AsyncTask<Void, String, Void> {
         }
     }
 
+    /**
+     * Tâche asynchrone du client
+     * @param voids
+     * @return Void
+     */
     @Override
     protected Void doInBackground(Void... voids) {
+        Socket sock = null;
+        DataOutputStream os = null;
+        DataInputStream is = null;
+
         try{
-            mSock = new Socket("192.168.1.16", 55555);
+            sock = new Socket("192.168.1.16", 55555);
             System.out.println("le socket est créé");
-            mOS = new DataOutputStream(mSock.getOutputStream());
-            mIS = new DataInputStream(mSock.getInputStream());
+            os = new DataOutputStream(sock.getOutputStream());
+            is = new DataInputStream(sock.getInputStream());
         }
         catch(Exception ex){
             ex.printStackTrace();
         }
-        if(mSock != null && mOS != null && mIS != null){
+        if(sock != null && os != null && is != null){
             try{
                 String responseLine = null;
-                while(((responseLine = mIS.readLine()) != null) && !isCancelled()){
+                while(((responseLine = is.readLine()) != null) && !isCancelled()){
                     String id = "";
                     id += responseLine.charAt(1);
                     id += responseLine.charAt(2);
@@ -58,9 +75,9 @@ public class Client extends AsyncTask<Void, String, Void> {
                         publishProgress(responseLine);
                     }
                 }
-                mOS.close();
-                mIS.close();
-                mSock.close();
+                os.close();
+                is.close();
+                sock.close();
             }
             catch(Exception ex){
                 ex.printStackTrace();
@@ -68,15 +85,4 @@ public class Client extends AsyncTask<Void, String, Void> {
         }
         return null;
     }
-
-    @Override
-    protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
 }
