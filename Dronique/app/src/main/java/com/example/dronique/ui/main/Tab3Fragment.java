@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
+
+import com.example.dronique.Drone;
 import com.example.dronique.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,13 +23,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class Tab3Fragment extends Fragment {
 
-    private MapView mMapView; //Carte
-    private GoogleMap mGoogleMap; //Carte Google
-    private SeekBar mSeekBar; //Contrôleur de la vitesse
+    private MapView mMapView;
+    private GoogleMap mGoogleMap;
+    private Drone mDrone;
+    private SeekBar mSeekBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_three, container, false);
+
+        // Gestion du drone
+        mDrone = new Drone();
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
@@ -56,8 +63,9 @@ public class Tab3Fragment extends Fragment {
                                                             .position(pos)
                                                             .title((String) textView.getText() + " noeuds")
                                                             .snippet("Cliquez ici pour supprimer le waypoint"));
-
-                                marker.showInfoWindow();
+                                double speed = Double.parseDouble(mTextView.getText().toString());
+                                mDrone.getWaypoint().addToWaypointHistory(pos.latitude, pos.longitude, speed);
+                                mMarker.showInfoWindow();
                             }
                         }
                 );
@@ -68,6 +76,7 @@ public class Tab3Fragment extends Fragment {
                             @Override
                             public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
+                                mDrone.getWaypoint().removeFromWaypointHistory(marker.getPosition().latitude, marker.getPosition().longitude);
                             }
                         }
                 );

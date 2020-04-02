@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Controleur de la première vue
+ */
 public class Tab1Fragment extends Fragment {
 
     private MapView mMapView = null;
@@ -39,11 +42,13 @@ public class Tab1Fragment extends Fragment {
     private Bundle mSavedState = null;
     private TextView mTextSpeed = null;
 
-    public Tab1Fragment(Drone drone)
-    {
-        mDrone = drone;
-    }
-
+    /**
+     * Création de la vue
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -66,7 +71,12 @@ public class Tab1Fragment extends Fragment {
             ex.printStackTrace();
         }
 
+        // Récupération de la GoogleMap
         mMapView.getMapAsync(new OnMapReadyCallback() {
+            /**
+             * Initialisation de la GoogleMap
+             * @param googleMap
+             */
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
@@ -79,6 +89,10 @@ public class Tab1Fragment extends Fragment {
     }
 
 
+    /**
+     * Etat de démarrage de la vue
+     * on instancie et éxécute le client
+     */
      @Override
     public void onStart(){
         super.onStart();
@@ -100,6 +114,10 @@ public class Tab1Fragment extends Fragment {
         mMapView.onPause();
     }
 
+    /**
+     * Etat de démarrage de la vue
+     * on instancie et éxécute le client
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -124,6 +142,9 @@ public class Tab1Fragment extends Fragment {
         mMapView.onLowMemory();
     }
 
+    /**
+     * Mise à jour de la position du drone sur la carte
+     */
     public void update() {
         if(mDrone != null) {
             LatLng pos = mDrone.getPosition();
