@@ -72,7 +72,7 @@ public class Tab3Fragment extends Fragment {
                                 Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                                                             .position(pos)
                                                             .title((String) textView.getText() + " noeuds")
-                                                            .snippet("Cliquez ici pour supprimer le waypoint"));
+                                                            .snippet("Cliquez pour supprimer"));
                                 double speed = Double.parseDouble(textView.getText().toString());
                                 mDrone.getWaypoint().addToWaypointHistory(pos.latitude, pos.longitude, speed); //Sauvegarde du point
                                 marker.showInfoWindow();
@@ -119,18 +119,23 @@ public class Tab3Fragment extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
+        //Envoi de la trame et tracer du chemin
         mButton=view.findViewById(R.id.button_envoyer);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //récupération des points sous la forme LatLng
                 ArrayList<LatLng> arrayList = new ArrayList<>();
                 List<Waypoint> list = mDrone.getWaypoint().getWaypointHistory();
                 for(int i=0; i<list.size();i++){
                     arrayList.add(list.get(i).getLatLng());
                 }
+
+                //suppression du tracé précédent (s'il existe)
                 if (mPolyline!=null){
                     mPolyline.remove();
                 }
+                //tracé de la trajectoire suivant les waypoints 
                 mPolyline=mGoogleMap.addPolyline(new PolylineOptions()
                         .addAll(arrayList)
                         .width(7)
