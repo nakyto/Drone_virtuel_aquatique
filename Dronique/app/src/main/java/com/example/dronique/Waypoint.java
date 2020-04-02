@@ -3,28 +3,26 @@ package com.example.dronique;
 public class Waypoint {
     private double mDroneLat = 0.0;
     private double mDroneLng = 0.0;
-    private String orientation_latitude = "N";
-    private String orientation_longitude = "E";
     private double mDroneSpeed = 0;
 
+    //Constructeur
     public Waypoint(double droneLat, double droneLng, double droneSpeed){
         mDroneLat = droneLat;
         mDroneLng = droneLng;
         mDroneSpeed = droneSpeed;
     }
-
+    //Getters
     public double getDroneLat(){
         return mDroneLat;
     }
-
     public double getDroneLng(){
         return mDroneLng;
     }
-
     public double getDroneSpeed(){
         return mDroneSpeed;
     }
 
+    //TODO : implémenter la création de la Trame à partir des waypoints
     public String parseToFrame(){
 
         return "toto";

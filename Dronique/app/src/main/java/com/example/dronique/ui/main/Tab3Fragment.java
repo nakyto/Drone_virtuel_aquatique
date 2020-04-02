@@ -6,11 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import com.example.dronique.Client;
 import com.example.dronique.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,54 +18,53 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.Map;
-
 public class Tab3Fragment extends Fragment {
 
-    private MapView mMapView;
-    private GoogleMap mGoogleMap;
-    private SeekBar mSeekBar;
+    private MapView mMapView; //Carte
+    private GoogleMap mGoogleMap; //Carte Google
+    private SeekBar mSeekBar; //Contrôleur de la vitesse
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View view = inflater.inflate(R.layout.fragment_three, container, false);
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
-
         try{
             MapsInitializer.initialize(getActivity().getApplicationContext());
         }
         catch (Exception ex){
             ex.printStackTrace();
         }
-
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
-                //création d'un waypoint après un click sur la carte
+                //Écouteur de la carte
                 mGoogleMap.setOnMapClickListener(
                         new GoogleMap.OnMapClickListener(){
+                            //Ajoute un Marker après un click à un endroit de la carte
                             @Override
                             public void onMapClick(LatLng pos){
-                                TextView mTextView = view.findViewById(R.id.speedView);
-                                Marker mMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                TextView textView = view.findViewById(R.id.speedView);
+
+                                //Définition des coordoonées et de la vitesse du point
+                                Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                                                             .position(pos)
-                                                            .title((String) mTextView.getText() + " noeuds")
+                                                            .title((String) textView.getText() + " noeuds")
                                                             .snippet("Cliquez ici pour supprimer le waypoint"));
-                                mMarker.setTag(true);
-                                mMarker.showInfoWindow();
+
+                                marker.showInfoWindow();
                             }
                         }
                 );
-                //suppression d'un waypoint après un click sur son info-bulle
+                //Écouteur de l'infobulle
                 mGoogleMap.setOnInfoWindowClickListener(
                         new GoogleMap.OnInfoWindowClickListener() {
+                            // Suppression d'un waypoint
                             @Override
                             public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
@@ -77,33 +72,32 @@ public class Tab3Fragment extends Fragment {
                         }
                 );
 
-                //définition de la position de la caméra au lancement de la vue
+                //Définition de la position de la caméra au lancement de la vue
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
+
+        //Gestion de la SeekBar pour définir la vitesse
         mSeekBar = (SeekBar) view.findViewById(R.id.speedBar);
         mSeekBar.setMax(60);
         mSeekBar.setProgress(15);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            // Modifie la vitesse affichée dans le textView
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser){
-                    TextView mTextView = view.findViewById(R.id.speedView);
-                    mTextView.setText(String.valueOf(progress));
+                    TextView textView = view.findViewById(R.id.speedView);
+                    textView.setText(String.valueOf(progress)); //Affichage de la vitesse
                 }
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
 
 
