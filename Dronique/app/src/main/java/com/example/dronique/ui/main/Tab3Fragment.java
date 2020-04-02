@@ -52,6 +52,7 @@ public class Tab3Fragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
+<<<<<<< HEAD
                 //création d'un waypoint après un click sur la carte
                 mGoogleMap.setOnMapClickListener(
                         new GoogleMap.OnMapClickListener(){
@@ -75,6 +76,8 @@ public class Tab3Fragment extends Fragment {
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+=======
+>>>>>>> Vue-1
             }
         });
 
