@@ -1,11 +1,13 @@
 package com.example.dronique;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Waypoint {
-    private List<Waypoint> mWaypointHistory = null;
 
+    private List<Waypoint> mWaypointHistory = null;
     private double mDroneLat = 0.0;
     private double mDroneLng = 0.0;
     private double mDroneSpeed = 0;
@@ -32,10 +34,15 @@ public class Waypoint {
         return mDroneSpeed;
     }
 
+    //Retourne les coordonnées au format LatLng
+    public LatLng getLatLng(){
+        return new LatLng(this.mDroneLat,this.mDroneLng);
+    }
+
 
     // Gestion de l'historique
     public List<Waypoint> getWaypointHistory() {
-        return getWaypointHistory();
+        return this.mWaypointHistory;
     }
 
     public void addToWaypointHistory(double droneLat, double droneLng, double droneSpeed) {

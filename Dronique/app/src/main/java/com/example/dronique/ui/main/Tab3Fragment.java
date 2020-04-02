@@ -1,9 +1,11 @@
 package com.example.dronique.ui.main;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dronique.Drone;
 import com.example.dronique.R;
+import com.example.dronique.Waypoint;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -20,6 +23,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tab3Fragment extends Fragment {
 
@@ -27,6 +35,7 @@ public class Tab3Fragment extends Fragment {
     private GoogleMap mGoogleMap;
     private Drone mDrone;
     private SeekBar mSeekBar;
+    private Button mButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,9 +72,9 @@ public class Tab3Fragment extends Fragment {
                                                             .position(pos)
                                                             .title((String) textView.getText() + " noeuds")
                                                             .snippet("Cliquez ici pour supprimer le waypoint"));
-                                double speed = Double.parseDouble(mTextView.getText().toString());
-                                mDrone.getWaypoint().addToWaypointHistory(pos.latitude, pos.longitude, speed);
-                                mMarker.showInfoWindow();
+                                double speed = Double.parseDouble(textView.getText().toString());
+                                mDrone.getWaypoint().addToWaypointHistory(pos.latitude, pos.longitude, speed); //Sauvegarde du point
+                                marker.showInfoWindow();
                             }
                         }
                 );
@@ -76,7 +85,7 @@ public class Tab3Fragment extends Fragment {
                             @Override
                             public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
-                                mDrone.getWaypoint().removeFromWaypointHistory(marker.getPosition().latitude, marker.getPosition().longitude);
+                                mDrone.getWaypoint().removeFromWaypointHistory(marker.getPosition().latitude, marker.getPosition().longitude); //Suppression des données stockées
                             }
                         }
                 );
@@ -107,6 +116,22 @@ public class Tab3Fragment extends Fragment {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+
+        mButton=view.findViewById(R.id.button_envoyer);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<LatLng> arrayList = new ArrayList<>();
+                List<Waypoint> list = mDrone.getWaypoint().getWaypointHistory();
+                for(int i=0; i<list.size();i++){
+                    arrayList.add(list.get(i).getLatLng());
+                }
+                mGoogleMap.addPolyline(new PolylineOptions()
+                        .addAll(arrayList)
+                        .width(7)
+                        .color(Color.RED));
+            }
         });
 
 
