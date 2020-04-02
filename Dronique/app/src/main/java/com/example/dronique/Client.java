@@ -8,7 +8,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-import static com.example.dronique.Waypoint.Parse;
+import static com.example.dronique.Waypoint.ParseFromFrame;
 
 public class Client extends AsyncTask<Void, String, Void> {
 
@@ -27,7 +27,7 @@ public class Client extends AsyncTask<Void, String, Void> {
     @Override
     protected void onProgressUpdate(String... responseLine){
         if(mDrone != null) {
-            mDrone.updatePosition(Parse(responseLine[0]));
+            mDrone.updatePosition(ParseFromFrame(responseLine[0]));
             mTab1.update();
         }
     }
