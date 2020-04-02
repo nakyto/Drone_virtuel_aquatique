@@ -3,4 +3,5 @@
     <string name="tab_text_1">Vue 1</string>
     <string name="tab_text_2">Vue 2</string>
     <string name="tab_text_3">Vue 3</string>
+    <string name="noeuds">noeud(s)</string>
 </resources>

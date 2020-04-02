@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -32,7 +33,7 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_three, container, false);
+        final View view = inflater.inflate(R.layout.fragment_three, container, false);
 
         // Gestion de la MapView
         mMapView = (MapView) view.findViewById(R.id.map);
@@ -48,7 +49,6 @@ public class Tab3Fragment extends Fragment {
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
-
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
@@ -57,24 +57,52 @@ public class Tab3Fragment extends Fragment {
                         new GoogleMap.OnMapClickListener(){
                             @Override
                             public void onMapClick(LatLng pos){
-                                mGoogleMap.addMarker(new MarkerOptions().position(pos));
+                                TextView mTextView = view.findViewById(R.id.speedView);
+                                Marker mMarker = mGoogleMap.addMarker(new MarkerOptions()
+                                                            .position(pos)
+                                                            .title((String) mTextView.getText() + " noeuds")
+                                                            .snippet("Cliquez ici pour supprimer le waypoint"));
+                                mMarker.setTag(true);
+                                mMarker.showInfoWindow();
                             }
                         }
                 );
-                //suppression d'un waypoint après un click sur celui-ci
-                mGoogleMap.setOnMarkerClickListener(
-                        new GoogleMap.OnMarkerClickListener() {
+                //suppression d'un waypoint après un click sur son info-bulle
+                mGoogleMap.setOnInfoWindowClickListener(
+                        new GoogleMap.OnInfoWindowClickListener() {
                             @Override
-                            public boolean onMarkerClick(Marker marker) {
+                            public void onInfoWindowClick(Marker marker) {
                                 marker.remove();
-                                return true;
                             }
                         }
                 );
+
                 //définition de la position de la caméra au lancement de la vue
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
+        mSeekBar = (SeekBar) view.findViewById(R.id.speedBar);
+        mSeekBar.setMax(60);
+        mSeekBar.setProgress(15);
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    TextView mTextView = view.findViewById(R.id.speedView);
+                    mTextView.setText(String.valueOf(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
