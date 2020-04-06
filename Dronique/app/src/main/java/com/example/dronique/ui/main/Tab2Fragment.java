@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.service.autofill.FieldClassification;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import com.example.dronique.Drone;
 import com.example.dronique.R;
+import com.example.dronique.Waypoint;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -30,12 +33,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Timer;
+
 public class Tab2Fragment extends Fragment implements SensorEventListener {
 
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private Marker mMarker;
     private Drone mDrone;
+    private Handler mHandler;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -44,8 +50,6 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
     private BitmapDrawable mBitmapDrawable =  null;
     private Bitmap mBitmap = null;
     private int mDefaultRotation = -43;
-
-    Thread mThread;
 
     float[] magneticVector = new float[3];
     float[] accelerometerVector = new float[3];
@@ -58,21 +62,18 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
 
         View view = inflater.inflate(R.layout.fragment_two, container, false);
 
+        // Gestion du drone
         mDrone = new Drone();
 
         //Gestion de la bitmap
         mBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.my_marker);
         mBitmap = Bitmap.createScaledBitmap(mBitmapDrawable.getBitmap(), 75, 75, false);
 
-        mThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mMarker.setPosition();
-            }
-        });
+        // Création du handler
+        mHandler = new Handler();
 
-                // Gestion de la MapView
-                mMapView = (MapView) view.findViewById(R.id.map);
+        // Gestion de la MapView
+        mMapView = (MapView) view.findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
 
@@ -88,6 +89,7 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
                 LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
+                mDrone.updatePosition(new Waypoint(46.1558, -1.1532, 0));
                 mMarker = mGoogleMap.addMarker(new MarkerOptions().position(posLaRochelle));
                 mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(mBitmap));
                 mMarker.setRotation(mDefaultRotation);
@@ -105,13 +107,93 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
         return view;
     }
 
+    private Runnable updateUI = new Runnable() {
+        @Override
+        public void run() {
+            SensorManager.getRotationMatrix(resultMatrix, null, accelerometerVector, magneticVector);
+            SensorManager.getOrientation(resultMatrix, values);
+            int asimuth = (int)Math.toDegrees(values[0]);
+            Log.w("ORIENTATION", "asimuth : " +  asimuth);
+
+            if(mMarker != null) {
+                mMarker.setRotation((float) Math.toDegrees(values[0]) + mDefaultRotation);
+
+                double degreeePerKM = 111.11;
+                double kmPerHour = 111.11;
+                double kmPerSec = 0;
+                if(accelerometerVector[1] <= 0)
+                    kmPerSec = kmPerHour / 3600;
+                else
+                    kmPerSec = kmPerHour - ((accelerometerVector[1] * kmPerHour) / 10);
+
+                // longitude
+                double kmPerDegreeLng = degreeePerKM * (double)Math.cos((int) mMarker.getPosition().latitude);
+                double longitudeAdded = kmPerSec / kmPerDegreeLng;
+
+                // lattitude
+                double kmPerDegreeLat = degreeePerKM;
+                double lattitudeAdded = kmPerSec / kmPerDegreeLat;
+
+
+                double newLat = mDrone.getPosition().latitude;
+                double newLng = mDrone.getPosition().longitude;
+                double lngPercentage = 0;
+                double latPercentage = 0;
+
+                if(0 < asimuth && asimuth <= 90) {
+                    lngPercentage = ((double)asimuth/90);
+                    latPercentage = 1 - lngPercentage;
+
+                    System.out.println("y : " + accelerometerVector[1]);
+
+                }
+            else if(90 < asimuth && asimuth <= 180) {
+                lngPercentage = (asimuth + 90) /180;
+                latPercentage = 1 - lngPercentage;
+
+                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
+                newLng = mMarker.getPosition().longitude + lngPercentage * longitudeAdded;
+            }
+            else if(-179 <= asimuth && asimuth < -90) {
+                lngPercentage = (asimuth + 180) /90;
+                latPercentage = 1 - lngPercentage;
+
+                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
+                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
+            }
+            else if(-90 < asimuth && asimuth <= 0) {
+                lngPercentage = (asimuth +90) /90;
+                latPercentage = 1 - lngPercentage;
+
+                newLat = mMarker.getPosition().latitude + latPercentage * lattitudeAdded;
+                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
+            }
+
+                System.out.println("current lattitude : " + mDrone.getPosition().latitude);
+                System.out.println("current longitude : " + mDrone.getPosition().longitude);
+
+                newLat = mDrone.getPosition().latitude + (latPercentage * lattitudeAdded);
+                newLng = mDrone.getPosition().longitude + (lngPercentage * longitudeAdded);
+
+                System.out.println("new lat : " + newLat);
+                System.out.println("new lng : " + newLng);
+
+                mDrone.updatePosition(new Waypoint(newLat, newLng, kmPerSec));
+            }
+            mMarker.setPosition(mDrone.getPosition());
+
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+
 
     @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        mSensorManager.registerListener(this, mAccelerometer, 1000000000);
-        mSensorManager.registerListener(this, mMagneticField, 1000000000);
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+        mHandler.post(updateUI);
     }
 
     @Override
@@ -146,68 +228,6 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
             accelerometerVector = event.values;
         }
 
-        SensorManager.getRotationMatrix(resultMatrix, null, accelerometerVector, magneticVector);
-        SensorManager.getOrientation(resultMatrix, values);
-        int asimuth = (int)Math.toDegrees(values[0]);
-        Log.w("ORIENTATION", "asimuth : " +  asimuth);
-
-        if(mMarker != null) {
-            mMarker.setRotation((float) Math.toDegrees(values[0]) + mDefaultRotation);
-
-            double kmPerHour = 0;
-            if(accelerometerVector[1] <= 0)
-                kmPerHour = 111.11;
-            else
-                kmPerHour = 111.11 - ((accelerometerVector[1] * 10 * 111.11) / 90);
-
-            // longitude
-            double kmPerDegreeLng = 111.11 * (double)Math.cos((int) mMarker.getPosition().longitude);
-            double longitudeAdded = kmPerHour / kmPerDegreeLng;
-
-            // lattitude
-            double kmPerDegreeLat = 111.11;
-            double lattitudeAdded = kmPerHour / kmPerDegreeLat;
-
-
-            double newLat = 0;
-            double newLng = 0;
-            double lngPercentage = 0;
-            double latPercentage = 0;
-            if(0 < asimuth && asimuth <= 90) {
-                lngPercentage = asimuth/90*100;
-                latPercentage = 100 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude + latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude + lngPercentage * longitudeAdded;
-            }
-            else if(90 < asimuth && asimuth <= 180) {
-                lngPercentage = (asimuth + 90) /180 * 100;
-                latPercentage = 100 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude + lngPercentage * longitudeAdded;
-            }
-            else if(-179 <= asimuth && asimuth < -90) {
-                lngPercentage = (asimuth + 180) /90 * 100;
-                latPercentage = 100 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
-            }
-            else if(-90 < asimuth && asimuth <= 0) {
-                lngPercentage = (asimuth +90) /90 * 100;
-                latPercentage = 100 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude + latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
-            }
-
-            mThread.
-
-            mMarker.setPosition(new LatLng(newLat, newLng));
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(newLat, newLng)).zoom(12).build();
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
     }
 
     @Override
