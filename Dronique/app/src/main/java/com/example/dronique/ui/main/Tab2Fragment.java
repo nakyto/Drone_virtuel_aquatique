@@ -110,79 +110,95 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
     private Runnable updateUI = new Runnable() {
         @Override
         public void run() {
+            int refresh = 200; // Taux de raffraichissement en ms
+
+            // Récupération de la valeur asimuth
             SensorManager.getRotationMatrix(resultMatrix, null, accelerometerVector, magneticVector);
-            SensorManager.getOrientation(resultMatrix, values);
+            float[] orientation = SensorManager.getOrientation(resultMatrix, values);
             int asimuth = (int)Math.toDegrees(values[0]);
-            Log.w("ORIENTATION", "asimuth : " +  asimuth);
 
-            if(mMarker != null) {
-                mMarker.setRotation((float) Math.toDegrees(values[0]) + mDefaultRotation);
-
-                double degreeePerKM = 111.11;
-                double kmPerHour = 111.11;
-                double kmPerSec = 0;
-                if(accelerometerVector[1] <= 0)
-                    kmPerSec = kmPerHour / 3600;
-                else
-                    kmPerSec = kmPerHour - ((accelerometerVector[1] * kmPerHour) / 10);
-
-                // longitude
-                double kmPerDegreeLng = degreeePerKM * (double)Math.cos((int) mMarker.getPosition().latitude);
-                double longitudeAdded = kmPerSec / kmPerDegreeLng;
-
-                // lattitude
-                double kmPerDegreeLat = degreeePerKM;
-                double lattitudeAdded = kmPerSec / kmPerDegreeLat;
-
-
-                double newLat = mDrone.getPosition().latitude;
-                double newLng = mDrone.getPosition().longitude;
-                double lngPercentage = 0;
-                double latPercentage = 0;
-
-                if(0 < asimuth && asimuth <= 90) {
-                    lngPercentage = ((double)asimuth/90);
-                    latPercentage = 1 - lngPercentage;
-
-                    System.out.println("y : " + accelerometerVector[1]);
-
-                }
-            else if(90 < asimuth && asimuth <= 180) {
-                lngPercentage = (asimuth + 90) /180;
-                latPercentage = 1 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude + lngPercentage * longitudeAdded;
+            // On fait la rotation du marqueur
+            float rotation = orientation[0];
+            if(rotation >= 0){
+                mMarker.setRotation(((rotation * 180) / 3 ) + mDefaultRotation);
             }
-            else if(-179 <= asimuth && asimuth < -90) {
-                lngPercentage = (asimuth + 180) /90;
-                latPercentage = 1 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude - latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
-            }
-            else if(-90 < asimuth && asimuth <= 0) {
-                lngPercentage = (asimuth +90) /90;
-                latPercentage = 1 - lngPercentage;
-
-                newLat = mMarker.getPosition().latitude + latPercentage * lattitudeAdded;
-                newLng = mMarker.getPosition().longitude - lngPercentage * longitudeAdded;
+            if(rotation < 0){
+                mMarker.setRotation((((rotation + 6) * 360) / 6 ) + mDefaultRotation);
             }
 
-                System.out.println("current lattitude : " + mDrone.getPosition().latitude);
-                System.out.println("current longitude : " + mDrone.getPosition().longitude);
+            System.out.println("asimuth : " + asimuth);
 
-                newLat = mDrone.getPosition().latitude + (latPercentage * lattitudeAdded);
+            // Variables
+            double degreeePerKM = 111.11;
+            double kmPerHour = 111.11;
+            double speed = 0; // Vitesse du drone en ms
+            double accelY = accelerometerVector[1];
+
+            if(accelY <= 0)
+                speed = kmPerHour / 3600000; // Vitesse maximum
+            else
+                speed = (kmPerHour - ((accelY * kmPerHour) / 10)) / 3600000;
+
+            // Récupération du nombre de degré longitude parcourable
+            double kmPerDegreeLng = degreeePerKM * (double)Math.cos((int) mMarker.getPosition().latitude);
+            double longitudeAdded = speed / kmPerDegreeLng; // Nombre de degrès parcourable par ms
+            longitudeAdded *= refresh; // On multipli pour chaque ms n'ont traité
+
+            // Récupération du nombre de degré lattitude parcourable
+            double kmPerDegreeLat = degreeePerKM;
+            double lattitudeAdded = speed / kmPerDegreeLat; // Nombre de degrès parcourable par ms
+            lattitudeAdded *= refresh; // On multipli pour chaque ms n'ont traité
+
+            //
+            double newLat = mDrone.getPosition().latitude;
+            double newLng = mDrone.getPosition().longitude;
+            double lngPercentage = 0;
+            double latPercentage = 0;
+
+            if(1 <= asimuth && asimuth <= 90) {
+                // Pourcentage représentant l'inclinaison de la trajectoire
+                lngPercentage = (double)asimuth / 90;
+                latPercentage = 1 - lngPercentage;
+
+
+                // Cas 1
+                newLat = mDrone.getPosition().latitude  + (latPercentage * lattitudeAdded);
+                newLng = mDrone.getPosition().longitude - (lngPercentage * longitudeAdded);
+            }
+            else if(91 <= asimuth && asimuth <= 180) {
+                // Pourcentage représentant l'inclinaison de la trajectoire
+                lngPercentage = (double)(asimuth-90) / 90;
+                latPercentage = 1 - lngPercentage;
+
+                // Cas 2
+                newLat = mDrone.getPosition().latitude  - (latPercentage * lattitudeAdded);
+                newLng = mDrone.getPosition().longitude - (lngPercentage * longitudeAdded);
+            }
+            else if(-180 <= asimuth && asimuth <= -90) {
+                // Pourcentage représentant l'inclinaison de la trajectoire
+                lngPercentage = (double)(asimuth + 180) / 90;
+                latPercentage = 1 - lngPercentage;
+
+                // Cas 3
+                newLat = mDrone.getPosition().latitude  - (latPercentage * lattitudeAdded);
                 newLng = mDrone.getPosition().longitude + (lngPercentage * longitudeAdded);
-
-                System.out.println("new lat : " + newLat);
-                System.out.println("new lng : " + newLng);
-
-                mDrone.updatePosition(new Waypoint(newLat, newLng, kmPerSec));
             }
+            else if(-89 <= asimuth && asimuth <= 0) {
+                // Pourcentage représentant l'inclinaison de la trajectoire
+                lngPercentage = (double)(asimuth + 90) /90;
+                latPercentage = 1 - lngPercentage;
+
+                // Cas 4
+                newLat = mDrone.getPosition().latitude  + (latPercentage * lattitudeAdded);
+                newLng = mDrone.getPosition().longitude + (lngPercentage * longitudeAdded);
+            }
+
+            // Mise à jour de la postion du drone
+            mDrone.updatePosition(new Waypoint(newLat, newLng, speed));
             mMarker.setPosition(mDrone.getPosition());
 
-            mHandler.postDelayed(this, 1000);
+            // On relance la tâche
+            mHandler.postDelayed(this, refresh);
         }
     };
 
