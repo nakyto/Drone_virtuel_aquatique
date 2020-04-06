@@ -18,22 +18,29 @@ import android.view.View;
 
 import com.example.dronique.ui.main.SectionsPagerAdapter;
 
+/**
+ * Classe principal de l'application
+ */
 public class MainActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mTabAdapter;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
+    /**
+     * Creation de l'activité
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Recuperation de la vue
+        // Recupération de la vue
         mViewPager = findViewById(R.id.view_pager);
         TabLayout tabs = findViewById(R.id.tabs);
 
-        // Creation de l'adapter
+        // Création de l'adapter
         mTabAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mTabAdapter.addFragment(new Tab1Fragment(), "vue 1");
         mTabAdapter.addFragment(new Tab2Fragment(), "vue 2");

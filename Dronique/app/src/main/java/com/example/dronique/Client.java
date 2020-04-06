@@ -2,14 +2,51 @@ package com.example.dronique;
 
 import android.os.AsyncTask;
 
+import com.example.dronique.ui.main.Tab1Fragment;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class Client extends AsyncTask<String, Void, Void> {
+import static com.example.dronique.Waypoint.ParseFromFrame;
 
+/**
+ * Client tcp pour se connecter au NMEA Simulator
+ */
+public class Client extends AsyncTask<Void, String, Void> {
+
+    private Drone mDrone;
+    private Tab1Fragment mTab1;
+
+    /**
+     * Constructeur du  Client
+     * @param drone
+     * @param tab1
+     */
+    public Client(Drone drone, Tab1Fragment tab1){
+        mDrone = drone;
+        mTab1 = tab1;
+    }
+
+    /**
+     * Réception de la progession du doInBackground
+     * @param responseLine
+     */
     @Override
-    protected Void doInBackground(String... strings) {
+    protected void onProgressUpdate(String... responseLine){
+        if(mDrone != null) {
+            mDrone.updatePosition(ParseFromFrame(responseLine[0]));
+            mTab1.update();
+        }
+    }
+
+    /**
+     * Tâche asynchrone du client
+     * @param voids
+     * @return Void
+     */
+    @Override
+    protected Void doInBackground(Void... voids) {
         Socket sock = null;
         DataOutputStream os = null;
         DataInputStream is = null;
@@ -23,12 +60,20 @@ public class Client extends AsyncTask<String, Void, Void> {
         catch(Exception ex){
             ex.printStackTrace();
         }
-
         if(sock != null && os != null && is != null){
             try{
                 String responseLine = null;
-                while((responseLine = is.readLine()) != null){
-                    System.out.println("Server: " + responseLine);
+                while(((responseLine = is.readLine()) != null) && !isCancelled()){
+                    String id = "";
+                    id += responseLine.charAt(1);
+                    id += responseLine.charAt(2);
+                    id += responseLine.charAt(3);
+                    id += responseLine.charAt(4);
+                    id += responseLine.charAt(5);
+
+                    if (id.contains("GPRMC")){
+                        publishProgress(responseLine);
+                    }
                 }
                 os.close();
                 is.close();
@@ -40,10 +85,4 @@ public class Client extends AsyncTask<String, Void, Void> {
         }
         return null;
     }
-
-    protected void onPostExecute() {
-
-    }
-
-
 }

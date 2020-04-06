@@ -15,14 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="25"/>
-
-        <SeekBar
-            android:id="@+id/speedBar"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:max="150"
-            android:progress="60" />
+            android:orientation="horizontal">
+            <SeekBar
+                android:id="@+id/speedBar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:max="150"
+                android:progress="60" />
+
+            <TextView
+                android:text="15"
+                android:id="@+id/speedView"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/noeuds" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
