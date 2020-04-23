@@ -126,8 +126,6 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
                 mMarker.setRotation((((rotation + 6) * 360) / 6 ) + mDefaultRotation);
             }
 
-            System.out.println("asimuth : " + asimuth);
-
             // Variables
             double degreeePerKM = 111.11;
             double kmPerHour = 111.11;

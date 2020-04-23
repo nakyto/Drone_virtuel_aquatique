@@ -104,4 +104,12 @@ public class Waypoint {
 
         return new Waypoint(latitude, longitude, drone_vitesse); //On retourne le Waypoint
     }
+
+    public String ParseToFrame(){
+
+        String frame = "GPRMC";
+        frame += " " ;
+
+        return frame;
+    }
 }

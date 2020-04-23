@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dronique.Drone;
 import com.example.dronique.R;
+import com.example.dronique.Server;
 import com.example.dronique.Waypoint;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -135,11 +136,17 @@ public class Tab3Fragment extends Fragment {
                 if (mPolyline!=null){
                     mPolyline.remove();
                 }
+
                 //tracé de la trajectoire suivant les waypoints 
                 mPolyline=mGoogleMap.addPolyline(new PolylineOptions()
                         .addAll(arrayList)
                         .width(7)
                         .color(Color.RED));
+
+                // Envoi des trames
+                Server serv = new Server(mDrone);
+                serv.execute();
+
             }
         });
 
