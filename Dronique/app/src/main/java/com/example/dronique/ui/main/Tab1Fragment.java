@@ -107,7 +107,6 @@ public class Tab1Fragment extends Fragment {
         mMapView.onResume();
     }
 
-
     @Override
     public void onPause() {
         super.onPause();

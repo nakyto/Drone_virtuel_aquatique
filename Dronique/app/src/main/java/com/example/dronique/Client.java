@@ -53,7 +53,6 @@ public class Client extends AsyncTask<Void, String, Void> {
 
         try{
             sock = new Socket("192.168.1.16", 55555);
-            System.out.println("le socket est créé");
             os = new DataOutputStream(sock.getOutputStream());
             is = new DataInputStream(sock.getInputStream());
         }

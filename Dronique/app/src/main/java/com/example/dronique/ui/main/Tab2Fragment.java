@@ -103,7 +103,6 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-
         return view;
     }
 
@@ -125,8 +124,6 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
             if(rotation < 0){
                 mMarker.setRotation((((rotation + 6) * 360) / 6 ) + mDefaultRotation);
             }
-
-            System.out.println("asimuth : " + asimuth);
 
             // Variables
             double degreeePerKM = 111.11;
@@ -216,8 +213,15 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        mHandler.removeCallbacks(updateUI);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMapView.onStop();
+        mHandler.removeCallbacks(updateUI);
+    }
 
     @Override
     public void onDestroy() {
