@@ -6,10 +6,10 @@ Ce projet est un projet pour le cour de Developement sur Smartphone en L3 inform
  + Version Android Studio (IDE) = 3.6.0
  + Version Android (os Smartphone) = 10 ou +
  + RAM 2 Go 
- + NMEA Simulator
-  + Version = 1.4.5
-  + ip serveur (default) : 192.162.1.16
-  + (latitude/longitude)  = (46,145/1,167) *vue sur La Rochelle*
+ + NMEA Simulator:
+    - Version = 1.4.5
+    - ip serveur (default) : 192.162.1.16
+    - (latitude/longitude)  = (46,145/1,167) *vue sur La Rochelle*
 
 **Note: Previlligier un appariel physique, plutôt qu'un émulateur**
  
