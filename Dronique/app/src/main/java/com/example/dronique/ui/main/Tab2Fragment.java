@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -33,10 +34,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.w3c.dom.Text;
+
 import java.util.Timer;
 
 public class Tab2Fragment extends Fragment implements SensorEventListener {
 
+    private TextView mTextView;
     private MapView mMapView;
     private GoogleMap mGoogleMap;
     private Marker mMarker;
@@ -65,7 +69,10 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
         // Gestion du drone
         mDrone = new Drone();
 
-        //Gestion de la bitmap
+        // Gestion du textview
+        mTextView = (TextView) view.findViewById(R.id.tvSetMarkerPos);
+
+        // Gestion de la bitmap
         mBitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.my_marker);
         mBitmap = Bitmap.createScaledBitmap(mBitmapDrawable.getBitmap(), 75, 75, false);
 
@@ -86,23 +93,32 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
 
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
+            public void onMapReady(final GoogleMap googleMap) {
                 mGoogleMap = googleMap;
-                LatLng posLaRochelle = new LatLng(46.1558,-1.1532);
-                mDrone.updatePosition(new Waypoint(46.1558, -1.1532, 0));
-                mMarker = mGoogleMap.addMarker(new MarkerOptions().position(posLaRochelle));
-                mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(mBitmap));
-                mMarker.setRotation(mDefaultRotation);
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(posLaRochelle).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+                mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        if(mMarker == null)
+                        {
+                            mTextView.setVisibility(View.INVISIBLE);
+                            LatLng pos = latLng;
+                            mDrone.updatePosition(new Waypoint(latLng.latitude, latLng.longitude, 0));
+                            mMarker = mGoogleMap.addMarker(new MarkerOptions().position(pos));
+                            mMarker.setIcon(BitmapDescriptorFactory.fromBitmap(mBitmap));
+                            mMarker.setRotation(mDefaultRotation);
+                            CameraPosition cameraPosition = new CameraPosition.Builder().target(pos).zoom(15).build();
+                            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                            mHandler.post(updateUI);
+                        }
+                    }
+                });
             }
         });
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
 
         return view;
     }
@@ -194,6 +210,8 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
             // Mise à jour de la postion du drone
             mDrone.updatePosition(new Waypoint(newLat, newLng, speed));
             mMarker.setPosition(mDrone.getPosition());
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(mDrone.getPosition()).zoom(15).build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             // On relance la tâche
             mHandler.postDelayed(this, refresh);
@@ -207,15 +225,23 @@ public class Tab2Fragment extends Fragment implements SensorEventListener {
         mMapView.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mMagneticField, SensorManager.SENSOR_DELAY_NORMAL);
-        mHandler.post(updateUI);
+        if(mMarker != null)
+            mHandler.post(updateUI);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+        mHandler.removeCallbacks(updateUI);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMapView.onStop();
+        mHandler.removeCallbacks(updateUI);
+    }
 
     @Override
     public void onDestroy() {
