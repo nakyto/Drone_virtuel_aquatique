@@ -1,5 +1,7 @@
 package com.example.dronique;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.dronique.ui.main.Tab1Fragment;
@@ -9,6 +11,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        int result=0;
+
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    result);
+
+        }
         // Recupération de la vue
         mViewPager = findViewById(R.id.view_pager);
         TabLayout tabs = findViewById(R.id.tabs);
