@@ -1,6 +1,9 @@
 package com.example.dronique.ui.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +12,13 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.dronique.Drone;
+import com.example.dronique.MainActivity;
 import com.example.dronique.R;
 import com.example.dronique.Server;
 import com.example.dronique.Waypoint;
@@ -27,6 +34,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +74,7 @@ public class Tab3Fragment extends Fragment {
         catch (Exception ex){
             ex.printStackTrace();
         }
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
 
             @Override
@@ -123,6 +142,7 @@ public class Tab3Fragment extends Fragment {
         //Envoi de la trame et tracer du chemin
         mButton=view.findViewById(R.id.button_envoyer);
         mButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 //récupération des points sous la forme LatLng
@@ -147,9 +167,33 @@ public class Tab3Fragment extends Fragment {
                 Server serv = new Server(mDrone);
                 serv.execute();
 
+                //Création du fichier de test JSON
+                JSONObject fichier = new JSONObject();
+
+                try {
+                    fichier.put("name","Trajectoire");
+                    fichier.put("desc","Destiné à être utilisé pour vérifier que tout fonctionne");
+                    JSONArray waypointsListArray = new JSONArray();
+                    for (Waypoint waypoint : mDrone.getWaypoint().getWaypointHistory()){
+                        JSONObject waypointJson = new JSONObject();
+                        waypointJson.put("lat",waypoint.getDroneLat());
+                        waypointJson.put("lng",waypoint.getDroneLng());
+                        waypointJson.put("speed",waypoint.getDroneSpeed());
+                        waypointsListArray.put(waypointJson);
+                    }
+                    fichier.put("waypoints",waypointsListArray);
+
+                    File file = getContext().getFilesDir();
+                    FileWriter fileWriter = new FileWriter(file.getPath() + "/trajectoire.json");
+                    fileWriter.write(fichier.toString(2));
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
-
 
         return view;
     }
