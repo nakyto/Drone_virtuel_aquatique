@@ -1,6 +1,6 @@
 # Drone_virtuel_aquatique
 
-Ce projet est un projet pour le cour de 'Développement sur Smartphone' en L3 informatique de l'Université de la Rochelle
+Ce projet est réaluser pour le cour de 'Développement sur Smartphone' en L3 informatique de l'Université de la Rochelle
 
 ## Prérequis Système et NMEA
 + Version Android Studio (IDE) = 3.6.0
@@ -51,6 +51,6 @@ Ce projet est un projet pour le cour de 'Développement sur Smartphone' en L3 in
 + Finalisation des fonctionalités
 + Création de nos vidéos 
 
-### Présentation de votre compréhension du besoin
+### Présentation de notre compréhension du besoin
 + Diagrammes de classes  :  draw.io + Visual paradigm
 + Diagrammes de fonctionnalités : draw.io  + Visual paradime
