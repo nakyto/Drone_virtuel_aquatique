@@ -1,19 +1,19 @@
 # Drone_virtuel_aquatique
 
-Ce projet est rÃ©aluser pour le cour de 'DÃ©veloppement sur Smartphone' en L3 informatique de l'UniversitÃ© de la Rochelle
+Ce projet est réalisé pour le cours de 'Développement sur Smartphone' en L3 informatique de l'Université de la Rochelle
 
-## PrÃ©requis SystÃ¨me et NMEA
+## Prérequis Système et NMEA:
 + Version Android Studio (IDE) = 3.6.0
 + Version Android (os Smartphone) = 10 ou +
-+ Recommander  RAM 1 Go ou +:
++ Recommandé  RAM 1 Go ou +:
 + NMEA Simulator:
     - Version = 1.4.5
     - Cocher : TCP Serveur ou Web Socket.
     - ip serveur NMEA Simulator (default) : 192.162.1.16
     - (latitude/longitude)  = (46,14812/-1,17384) *vue sur La Rochelle*
 
-### MÃ©thode utiliser le NMEA Simulateur serveur 
-- RÃ©cupÃ©rÃ© l'adresse ip locale du pc qui hÃ©berge NMEA Simulator
+### Méthode utiliser le NMEA Simulateur serveur 
+- Récupérer l'adresse ip locale du pc qui héberge NMEA Simulator
 - Lancer le NMEA Simulator avec l'adresse IP locale du PC 
 - Modifier l'adresse IP dans la classe client ( adresse IP du PC)
 
@@ -21,36 +21,36 @@ Ce projet est rÃ©aluser pour le cour de 'DÃ©veloppement sur Smartphone' en L3 in
 ## Contributeur
 + Theo BERGUIG : Chef de projet
 + Lumagnus/Simon CLEMENCEAU : Scrum Master
-+ playfun25/Teddy NIEMEZYK : Lead Devlopeur
-+ MÃ©lanie RENNIE :  DÃ©veloppeur
-+ Dorian GACON : DÃ©veloppeur
++ playfun25/Teddy NIEMEZYK : Lead Developer
++ Mélanie RENNIE :  Développeur
++ Dorian GACON : Développeur
 
 ---
 
-## DÃ©pot 1
-### les outils
-+ IDE : android studio
+## Dépot 1
+### les outils:
++ IDE : Android Studio
 + Versioning  :  git [lien vers le projet](https://github.com/nakyto/Drone_virtuel_aquatique)
 + Gestion de projet :  Trello
-+ MÃ©thode AGIL utiliser
++ Méthode Agile utilisée
 
 ---
 
-## DÃ©pot 2
-### Fichier rÃ©aliser :
+## Dépot 2
+### Fichiers réalisés :
 + Rapport : Pdf [lien vers le raport](https://drive.google.com/drive/folders/1XMlptTeZl-QSJMzB7qhknfOK9TYLbPPQ)
-+ RÃ©alisation des modeles sur draw.io & Visual paradigm
++ Réalisation des modèles sur draw.io & Visual Paradigm
 + Backlog 
 
 ---
 
-## DÃ©pot 3
+## Dépot 3
 ### Finalisation 
 + Finalisation du rapport 
-+ Finalisation des modÃ¨les
-+ Finalisation des fonctionalitÃ©s
-+ CrÃ©ation de nos vidÃ©os 
++ Finalisation des modèles
++ Finalisation des fonctionalités
++ Création de nos vidéos 
 
-### PrÃ©sentation de notre comprÃ©hension du besoin
-+ Diagrammes de classes  :  draw.io + Visual paradigm
-+ Diagrammes de fonctionnalitÃ©s : draw.io  + Visual paradime
+### Présentation de notre compréhension du besoin
++ Diagrammes de classes  :  draw.io + Visual Paradigm
++ Diagrammes de fonctionnalités : draw.io  + Visual Paradigm
